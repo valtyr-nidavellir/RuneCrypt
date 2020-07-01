@@ -1,0 +1,11 @@
+{
+    "--comment-file":"specify a file or file path to encrypt",
+    "file":"",
+
+    "--comment-data":"specify raw data to encrypt",
+    "data":"",
+
+    "--comment-layers":"specify encryption layers - available: random, ",
+    "layers":["random","random","random","random","random","random","random","random","random","random"]
+    
+}
