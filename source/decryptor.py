@@ -1,18 +1,38 @@
 from cryptography.fernet import Fernet
 from Crypto.Cipher import AES
+from Crypto.Cipher import ARC2
+from Crypto.Cipher import ARC4
+import manipulator as m
+import encryptor
 import json
 
-def parse_cryptoglyph(data):
-    data=json.loads(data)
-    return data
+def parse_cryptoglyph(password,data):
+    try:
+        return json.loads(arc4(encryptor.get_hashed_pass(password).encode(),data))
+    except:
+        print('Incorrect Password!')
+        exit(0)
+
+def eval_aspects(key,tag,nonce):
+    return eval(key),eval(tag),eval(nonce)
 
 def fernet(key,data):
-    cipher=Fernet(key)
+    cipher=Fernet(eval(key))
     return cipher.decrypt(data)
 
-def aes(key,data,tag,nonce):
-    key=eval(key)
-    tag=eval(tag)
-    nonce=eval(nonce)
+def aes_eax(key,data,tag,nonce):
+    key,tag,nonce=eval_aspects(key,tag,nonce)
     cipher=AES.new(key,AES.MODE_EAX,nonce)
     return cipher.decrypt_and_verify(data,tag)
+
+def arc2_eax(key,data,tag,nonce):
+    key,tag,nonce=eval_aspects(key,tag,nonce)
+    cipher=ARC2.new(key,ARC2.MODE_EAX,nonce)
+    return cipher.decrypt_and_verify(data,tag)
+
+def arc4(key,data):
+    try:
+        cipher=ARC4.new(eval(key))
+    except:
+        cipher=ARC4.new(key)
+    return cipher.decrypt(data)

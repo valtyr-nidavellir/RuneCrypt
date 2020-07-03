@@ -1,6 +1,7 @@
 #valtyr
 import manipulator as m
 import json
+import encryptor
 
 def create_glyph(glyph):
     data={}
@@ -10,14 +11,12 @@ def create_glyph(glyph):
     for layer in glyph.layers:
         data['Layer-'+str(counter)]=layer.get_json()
         counter=counter+1
-
-    m.write_file('crypto.glyph',json.dumps(data))
-    #ENCRYPT CRYPTO.GLYPH WITH PASSWORD AFTER DATA WRITE
+    encryptor.secure_glyph(glyph.password,str.encode(json.dumps(data)))
     return
 
 class layer:
     def get_json(self):
-        return {"op":self.operation,"key":self.key,"tag":self.tab,"nonce":self.nonce}
+        return {"op":self.operation,"key":self.key,"tag":self.tab,"nonce":self.nonce,"padding":self.padding}
 
     def add_all(self,operation,key,tab,nonce):
         self.add_op(operation)
@@ -33,21 +32,22 @@ class layer:
         self.operation=operation
     
     def add_key(self,key):
-        try:
-            self.key=m.to_string(key)
-        except:
-            self.key=key
+        self.key=str(key)
 
     def add_tab(self,tab):
         self.tab=tab
     
     def add_nonce(self,nonce):
         self.nonce=nonce
+    
+    def add_padding(self,padding):
+        self.padding=padding
 
     key=None
     operation=None
     tab=None
     nonce=None
+    padding=None
 
 
 class glyph:
