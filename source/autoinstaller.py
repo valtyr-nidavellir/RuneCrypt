@@ -3,7 +3,6 @@
 #python autoinstaller.py
 
 import subprocess
-from terminal import colors as c
 
 pip=[
     "pip",
@@ -15,7 +14,9 @@ pip=[
 
 packages=[
     "cryptography",
-    "pycryptodome"
+    "pycryptodome",
+    "stegano",
+    "pillow"
 ]
 
 print('Running pip package autoinstaller...')
@@ -36,7 +37,7 @@ print('Continuing execution...')
 
 try:
     for package in packages:
-        print(c.Bright_Cyan+'installing:\t'+package+c.White)
+        print('installing:\t'+package)
         try:
             subprocess.run(["pip", "install", package])
         except:
@@ -44,4 +45,4 @@ try:
 except:
     print('ERR: Unknown Interruption')
 
-print(c.Bright_Green+'Autoinstaller has completed execution!'+c.White)
+print('Autoinstaller has completed execution!')

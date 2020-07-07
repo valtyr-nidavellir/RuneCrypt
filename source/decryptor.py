@@ -23,12 +23,22 @@ def fernet(key,data):
 def aes_eax(key,data,tag,nonce):
     key,tag,nonce=eval_aspects(key,tag,nonce)
     cipher=AES.new(key,AES.MODE_EAX,nonce)
-    return cipher.decrypt_and_verify(data,tag)
+    try:
+        return cipher.decrypt_and_verify(data,tag)
+    except(ValueError):
+        print('Decryption Failed: MAC check failed.')
+        exit(0)
+    return 
 
 def arc2_eax(key,data,tag,nonce):
     key,tag,nonce=eval_aspects(key,tag,nonce)
     cipher=ARC2.new(key,ARC2.MODE_EAX,nonce)
-    return cipher.decrypt_and_verify(data,tag)
+    try:
+        return cipher.decrypt_and_verify(data,tag)
+    except(ValueError):
+        print('Decryption Failed: MAC check failed.')
+        exit(0)
+    return
 
 def arc4(key,data):
     try:

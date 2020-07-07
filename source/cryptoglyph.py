@@ -7,6 +7,7 @@ def create_glyph(glyph):
     data={}
     counter=0
     data['Layers']=len(glyph.layers)
+    data['Name']=glyph.name
     data['Format']=glyph.file_format
     for layer in glyph.layers:
         data['Layer-'+str(counter)]=layer.get_json()
@@ -62,8 +63,12 @@ class glyph:
 
     def add_password(self,password):
         self.password=password
+    
+    def add_name(self,name):
+        self.name=name
 
     layers=[]    
+    name=None
     file_format=None
     password=None
     date_lock=None

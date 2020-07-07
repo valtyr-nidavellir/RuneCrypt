@@ -1,10 +1,10 @@
 #valtyr
 from cryptography.fernet import Fernet
 from Crypto.Util import Padding
+# from Crypto.Cipher import 
 from Crypto.Cipher import AES
 from Crypto.Cipher import ARC2
 from Crypto.Cipher import ARC4
-# from Crypto.Cipher import 
 from Crypto.Hash import SHA256
 from Crypto import Random
 from random import choice
@@ -14,12 +14,14 @@ import json
 def get_general_key():
     return Random.get_random_bytes(choice([16,24,32]))
 
+def get_random_bytes(size):
+    return Random.get_random_bytes(size)
+
 def get_hashed_pass(password):
     return SHA256.new(str.encode(password)).hexdigest()
 
 def secure_glyph(password,data):
     hashed=get_hashed_pass(password)
-    print('Securing crypto.glyph with password...')
 
     #TODO need to change to something better later
     data=arc4(hashed.encode(),data)
