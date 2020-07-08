@@ -1,11 +1,22 @@
 {
-    "--comment-file":"specify a file or file path to encrypt",
+    "--comment-file":"specify a file or file path to encrypt.",
     "file":"",
 
-    "--comment-data":"specify raw data to encrypt",
-    "data":"",
+    "--comment-layers":"specify encryption layers. leave blank for 50 random layers. available: random,fernet,aes_eax,arc2_eax,arc4.",
+    "layers":[""],
 
-    "--comment-layers":"specify encryption layers - available: random, ",
-    "layers":["random","random","random","random","random","random","random","random","random","random"]
+    "--comment-password":"specify a password which is used to encrypt the crypto.glyph. delete this password after encrypting.",
+    "password":"",
     
+    "--comment-huff":"optional: change to true to enable Huffman encoding to reduce final encryption size.",
+    "huff":false,
+
+    "--comment-steg":"optional: specify a file or file path to hide the rune.glyph in. can be a video.",
+    "steg":"",
+
+    "--comment-date":"optional: specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.",
+    "date":"",
+
+    "--comment-decoy":"optional: change to true to enable decoys. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy.",
+    "decoy":false
 }

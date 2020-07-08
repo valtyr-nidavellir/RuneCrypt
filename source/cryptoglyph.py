@@ -50,7 +50,6 @@ class layer:
     nonce=None
     padding=None
 
-
 class glyph:
     def add_date(self,date):
         self.date_lock=date

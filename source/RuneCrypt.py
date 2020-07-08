@@ -12,10 +12,14 @@ import tkinter.font as font
 from PIL import Image, ImageTk
 import webbrowser
 
+
+def get_available_ops():
+    return ['fernet','aes_eax','arc2_eax','arc4']
+
 def parse_encry(encry):
     if encry==None:
         #default layering
-        available_ops=['fernet','aes_eax','arc2_eax','arc4']
+        available_ops=get_available_ops()
         op_count=0
         ops=[]
         while op_count != 50:
@@ -26,6 +30,11 @@ def parse_encry(encry):
         return encry.split('-')
 
 def encrypt(data,op,glyph):
+
+    if op=='random':
+        op=get_available_ops()
+        op=randint(0,len(op)-1)
+
     if op=='fernet':
         layer=cryptoglyph.layer()
         key=encryptor.get_fernet_key()
@@ -145,17 +154,18 @@ def execute():
     return 
 
 parser = argparse.ArgumentParser(description='RuneCrypt : Hardcore Encryption')
-parser.add_argument('gui',action='store',nargs='?',default=False,const=True,help='Used to open the GUI version of RuneCrypt. Useful for first timers.')
+#under construction
+# parser.add_argument('gui',action='store',nargs='?',default=False,const=True,help='Used to open the GUI version of RuneCrypt. Useful for first timers.')
 parser.add_argument('-g',dest='glyph',action='store',default=None,help='Optional:Specify a json file to generate a crypto.glyph. Used to streamline RuneCrypt and ignore all cli args.')
-parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used to flag a file for encryption/decryption. ex. -f example.txt')
+parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used to flag a file for encryption/decryption. ex. -f example.txt or rune.glyph.')
 
-parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph')
-parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 35 random layers.')
+parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
+parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 50 random layers.')
 parser.add_argument('-p',dest='password',action='store',default=None,help='Specify a password used to encrypt/decrypt a crypto.glyph.')
 
-parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. ex. -decoy True or T.')
+parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
 parser.add_argument('-s',dest='steg_file',action='store',default=False,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
-parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or T.')
+parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
 parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
 
 args=parser.parse_args()
@@ -231,4 +241,12 @@ else:
         else: #makes encription the default action
             if(run_decry(args.decry,args.raw_file)):
                 print('Decryption Complete!')
+
+#DATE LOCK PROTOTYPE
+# accept date through arg
+# add to the password then hash
+# in decrypting check system date against ntp date
+# if different refuse decryption
+# if same try decrypt with date appended to pass and hashed
+# if fail then try password hash only              
     
