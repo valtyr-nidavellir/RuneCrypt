@@ -171,18 +171,18 @@ parser.add_argument('-date',dest='date_lock',action='store',default=False,help='
 args=parser.parse_args()
 
 term.clear_terminal() 
-colors=term.colors
 
 global img
 #use glyph here to skip all flag checks 
 
 if args.glyph != None:
     glyph=m.read_file(str(args.glyph))
-    print(colors.Bright_Cyan+'Glyph file loaded!'+colors.White)
+    print('Glyph file loaded!')
     #add glyph load for args
 
 else:
-    if args.gui=='gui':
+    if False:
+    # if args.gui=='gui':
         #TODO: opens when decoy is signaled for some reason
 
         #launch gui version
@@ -225,14 +225,14 @@ else:
         raw_data=None 
 
         if args.raw_file == None:
-            print(colors.Bright_Red+'So uh...I need a file or data to encrypt/decrypt. Use -f for files or -d for raw data.'+colors.White)
+            print('So uh...I need a file or data to encrypt/decrypt. Use -f for files or -d for raw data.')
             exit(0)
         else:
             data=m.read_data(str(args.raw_file))
             
 
         if args.password==None:
-            print(colors.Bright_Red+'I need a password to encrypt/decrypt the crypto.glyph! Use -p {password}.'+colors.White)
+            print('I need a password to encrypt/decrypt the crypto.glyph! Use -p {password}.')
             exit(0)
 
         if args.decry == None:

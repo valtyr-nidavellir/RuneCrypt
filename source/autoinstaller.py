@@ -30,7 +30,8 @@ except:
     print('No pip detected...aborting...')
     exit(1)
 
-if(input('Upgrade pip? Y/N: ')=='y' or 'Y'):
+choice=input('Upgrade pip? Y/N: ')
+if(choice=='y' or choice=='Y'):
     subprocess.run(pip)
 
 print('Continuing execution...')
