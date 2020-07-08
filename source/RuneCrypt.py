@@ -9,7 +9,7 @@ import json
 from random import randint
 import tkinter as tk
 import tkinter.font as font
-from PIL import Image, ImageTk
+from PIL import Image#, ImageTk
 import webbrowser
 
 
