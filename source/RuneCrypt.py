@@ -13,51 +13,48 @@ from PIL import Image, ImageTk
 import webbrowser
 
 
-def get_available_ops():
+def get_available():
     return ['fernet','aes_eax','arc2_eax','arc4']
 
 def parse_encry(encry):
     if encry==None:
         #default layering
-        available_ops=get_available_ops()
-        op_count=0
+        available=get_available()
+        count=0
         ops=[]
-        while op_count != 50:
-            ops.append(available_ops[randint(0,len(available_ops)-1)])
-            op_count=op_count+1
+        while count != 50:
+            ops.append(available[randint(0,len(available)-1)])
+            count=count+1
         return ops
     else:
         return encry.split('-')
 
 def encrypt(data,op,glyph):
+    layer=cryptoglyph.layer()
 
     if op=='random':
-        op=get_available_ops()
+        op=get_available()
         op=randint(0,len(op)-1)
 
     if op=='fernet':
-        layer=cryptoglyph.layer()
         key=encryptor.get_fernet_key()
         data=encryptor.fernet(key,data)
         layer.add_some(op,key)
         glyph.add_layer(layer)
 
     elif op=='aes_eax':
-        layer=cryptoglyph.layer()
         key=encryptor.get_general_key()
         data,tag,nonce=encryptor.aes_eax(key,data)
         layer.add_all(op,str(key),str(tag),str(nonce))
         glyph.add_layer(layer)
 
     elif op=='arc2_eax':
-        layer=cryptoglyph.layer()
         key=encryptor.get_general_key()
         data,tag,nonce=encryptor.arc2_eax(key,data)
         layer.add_all(op,str(key),str(tag),str(nonce))
         glyph.add_layer(layer)
 
     elif op=='arc4':
-        layer=cryptoglyph.layer()
         key=encryptor.get_general_key()
         data=encryptor.arc4(key,data)
         layer.add_some(op,str(key))

@@ -5,6 +5,8 @@
 import subprocess
 
 pip=[
+    "python3",
+    "-m",
     "pip",
     "install",
     "--upgrade",
@@ -24,7 +26,7 @@ print('Interupting this process may cause unintentional damage...please be patie
 
 print('Checking pip...')
 try:
-    subprocess.run(['pip','--version'])
+    subprocess.run(['python3','-m','pip','--version'])
 
 except:
     print('No pip detected...aborting...')
@@ -40,7 +42,7 @@ try:
     for package in packages:
         print('installing:\t'+package)
         try:
-            subprocess.run(["pip", "install", package])
+            subprocess.run(["python3","-m","pip","install", package])
         except:
             print('ERR: Failed to install:\t'+package)
 except:
