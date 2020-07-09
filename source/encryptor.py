@@ -1,6 +1,5 @@
 #valtyr
 from cryptography.fernet import Fernet
-from Crypto.Util import Padding
 # from Crypto.Cipher import 
 from Crypto.Cipher import AES
 from Crypto.Cipher import ARC2

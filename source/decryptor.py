@@ -2,7 +2,6 @@ from cryptography.fernet import Fernet
 from Crypto.Cipher import AES
 from Crypto.Cipher import ARC2
 from Crypto.Cipher import ARC4
-import manipulator as m
 import encryptor
 import json
 

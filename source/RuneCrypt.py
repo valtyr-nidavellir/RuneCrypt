@@ -71,6 +71,7 @@ def run_encry(data):
     if args.decoy:
         fake_data=encryptor.get_random_bytes(len(data))
         fake_glyph=cryptoglyph.glyph()
+        fake_glyph.password=args.password
 
     percent_total=len(ops)
     percent_current=1
@@ -80,6 +81,10 @@ def run_encry(data):
         term.printProgressBar(percent_current,percent_total,prefix='Encrypting Data:',suffix='Complete',length=50)
         percent_current=percent_current+1
 
+    m.write_data('rune.glyph',data)
+    # print('Securing crypto.glyph with password...')
+    cryptoglyph.create_glyph(glyph)
+
     if args.decoy:
         percent_current=1
         for op in ops:
@@ -88,9 +93,6 @@ def run_encry(data):
             percent_current=percent_current+1
         m.write_data('decoy/rune.glyph',fake_data)
 
-    m.write_data('rune.glyph',data)
-    print('Securing crypto.glyph with password...')
-    cryptoglyph.create_glyph(glyph)
 
     return True
 
@@ -170,7 +172,6 @@ if args.glyph!=None:
         exit(0)
 
     if glyph['layers']==['']:
-        print('entered')
         args.encry=None
     elif glyph['layers']!=['']:
         args.encry='-'.join(glyph['layers'])

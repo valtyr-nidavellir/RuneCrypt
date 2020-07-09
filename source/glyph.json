@@ -1,12 +1,12 @@
 {
     "--comment-file":"specify a file or file path to encrypt.",
-    "file":"",
+    "file":"valtyr.png",
 
     "--comment-layers":"specify encryption layers. leave blank for 50 random layers. available: random,fernet,aes_eax,arc2_eax,arc4.",
     "layers":[""],
 
     "--comment-password":"specify a password which is used to encrypt the crypto.glyph. delete this password after encrypting.",
-    "password":"",
+    "password":"asdf",
     
     "--comment-huff":"optional: change to true to enable Huffman encoding to reduce final encryption size.",
     "huff":false,
@@ -18,5 +18,5 @@
     "date":"",
 
     "--comment-decoy":"optional: change to true to enable decoys. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy.",
-    "decoy":false
+    "decoy":true
 }

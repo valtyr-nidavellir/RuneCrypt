@@ -1,5 +1,4 @@
 #valtyr
-import terminal
 
 def read_file(file_name):
     data=None
