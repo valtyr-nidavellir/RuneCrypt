@@ -7,11 +7,6 @@ import cryptoglyph
 import argparse 
 import json
 from random import randint
-import tkinter as tk
-import tkinter.font as font
-from PIL import Image#, ImageTk
-import webbrowser
-
 
 def get_available():
     return ['fernet','aes_eax','arc2_eax','arc4']
@@ -31,6 +26,7 @@ def parse_encry(encry):
 
 def encrypt(data,op,glyph):
     layer=cryptoglyph.layer()
+    key=encryptor.get_general_key()
 
     if op=='random':
         op=get_available()
@@ -40,29 +36,23 @@ def encrypt(data,op,glyph):
         key=encryptor.get_fernet_key()
         data=encryptor.fernet(key,data)
         layer.add_some(op,key)
-        glyph.add_layer(layer)
 
     elif op=='aes_eax':
-        key=encryptor.get_general_key()
         data,tag,nonce=encryptor.aes_eax(key,data)
         layer.add_all(op,str(key),str(tag),str(nonce))
-        glyph.add_layer(layer)
 
     elif op=='arc2_eax':
-        key=encryptor.get_general_key()
         data,tag,nonce=encryptor.arc2_eax(key,data)
         layer.add_all(op,str(key),str(tag),str(nonce))
-        glyph.add_layer(layer)
 
     elif op=='arc4':
-        key=encryptor.get_general_key()
         data=encryptor.arc4(key,data)
         layer.add_some(op,str(key))
-        glyph.add_layer(layer)
 
     else:
-        no='match'
-        #random
+        print('Unknown Encryption Layer: Exiting...')
+        exit(0)
+    glyph.add_layer(layer)
     return data
 
 def run_encry(data):
@@ -78,25 +68,25 @@ def run_encry(data):
 
     data=m.to_bytes(data)
 
-    if(args.decoy):
-        fake=encryptor.get_random_bytes(len(data))
+    if args.decoy:
+        fake_data=encryptor.get_random_bytes(len(data))
         fake_glyph=cryptoglyph.glyph()
-        fake_glyph.password=args.password
 
     percent_total=len(ops)
     percent_current=1
+
     for op in ops:
         data=encrypt(data,str(op).lower(),glyph)           
         term.printProgressBar(percent_current,percent_total,prefix='Encrypting Data:',suffix='Complete',length=50)
         percent_current=percent_current+1
 
-    if(args.decoy):
+    if args.decoy:
         percent_current=1
         for op in ops:
-            fake=encrypt(fake,str(op).lower(),fake_glyph)
+            fake_data=encrypt(fake_data,str(op).lower(),fake_glyph)
             term.printProgressBar(percent_current,percent_total,prefix='Encrypting Decoy:',suffix='Complete',length=50)
             percent_current=percent_current+1
-        m.write_data('decoy/rune.glyph',fake)
+        m.write_data('decoy/rune.glyph',fake_data)
 
     m.write_data('rune.glyph',data)
     print('Securing crypto.glyph with password...')
@@ -114,11 +104,11 @@ def decrypt(key,data,op,tag,nonce):
     elif op=='arc4':
         return decryptor.arc4(key,data)
     else:
-        do='nothing'
+        print('Unknown Decryption Layer: Exiting...')
+        exit(0)
     return
 
 def run_decry(crypto_glyph,raw_file):
-    #read crypto.glyph and prompt for password 
     glyph=decryptor.parse_cryptoglyph(args.password,m.read_data(crypto_glyph))
 
     file_format=glyph['Format']
@@ -143,101 +133,87 @@ def run_decry(crypto_glyph,raw_file):
     m.write_data(final_name,data)
     return True
 
-def open_doc():
-    #TODO: Change the link to git webpages for runecrypt info site
-    webbrowser.open('https://github.com/valtyr-nidavellir/')
-
-def execute():
-    return 
-
 parser = argparse.ArgumentParser(description='RuneCrypt : Hardcore Encryption')
-#under construction
-# parser.add_argument('gui',action='store',nargs='?',default=False,const=True,help='Used to open the GUI version of RuneCrypt. Useful for first timers.')
 parser.add_argument('-g',dest='glyph',action='store',default=None,help='Optional:Specify a json file to generate a crypto.glyph. Used to streamline RuneCrypt and ignore all cli args.')
 parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used to flag a file for encryption/decryption. ex. -f example.txt or rune.glyph.')
 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
 parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 50 random layers.')
 parser.add_argument('-p',dest='password',action='store',default=None,help='Specify a password used to encrypt/decrypt a crypto.glyph.')
-
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
-parser.add_argument('-s',dest='steg_file',action='store',default=False,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
+parser.add_argument('-s',dest='steg',action='store',default=False,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
 parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
 parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
 
 args=parser.parse_args()
 
 term.clear_terminal() 
+m.print_title()
 
-global img
-#use glyph here to skip all flag checks 
+if args.glyph!=None:
+    try:
+        glyph=json.loads(m.read_data(str(args.glyph)))
+        print('Glyph file loaded!')
+    except:
+        print('File Read Error: Glyph no loaded.')
 
-if args.glyph != None:
-    glyph=m.read_file(str(args.glyph))
-    print('Glyph file loaded!')
-    #add glyph load for args
-
-else:
-    if False:
-    # if args.gui=='gui':
-        #TODO: opens when decoy is signaled for some reason
-
-        #launch gui version
-        window=tk.Tk()
-        window.iconbitmap('data/valtyr.ico')
-        window.configure(bg='black')
-        img=ImageTk.PhotoImage(Image.open("title_img.png"))
-        title=tk.Label(window,image=img,borderwidth=0,highlightthickness=0)
-        title.place(x=5,y=0)
-        font=font.Font(size=30)
-
-        #encry btn
-        btn_encry=tk.Button(window,borderwidth=0,highlightthickness=0,text='Encrypt',bg="#121212",fg="#e60000")
-        btn_encry['font']=font
-        btn_encry.place(x=20,y=450)
-
-        #decry btn
-        btn_decry=tk.Button(window,borderwidth=0,highlightthickness=0,text='Decrypt',bg="#121212",fg="#e60000")
-        btn_decry['font']=font
-        btn_decry.place(x=200,y=450)
-
-        #information btn
-        btn_info=tk.Button(window,command=open_doc,borderwidth=0,highlightthickness=0,text='Documentation',bg="#121212",fg="#e60000")
-        btn_info['font']=font
-        btn_info.place(x=380,y=450)
-
-        #command-line width=175,height=2,
-        command_line=tk.Label(window,width=52,borderwidth=0,highlightthickness=0,text='Current Command: ',bg="#121212",fg="#e60000")
-        command_line.place(x=20,y=550)
-        command_line['font']=font
-
-        btn_info=tk.Button(window,command=execute,borderwidth=0,highlightthickness=0,text='Execute',bg="#121212",fg="#e60000")
-        btn_info['font']=font
-        btn_info.place(x=20,y=600)
-
-        window.geometry("1240x800")
-        window.mainloop()
+    if glyph['password']!='':
+        args.password=glyph['password']
     else:
-        m.print_title()
-        raw_data=None 
+        print('Bad password in glyph.')
+        exit(0)
 
-        if args.raw_file == None:
-            print('So uh...I need a file or data to encrypt/decrypt. Use -f for files or -d for raw data.')
-            exit(0)
-        else:
-            data=m.read_data(str(args.raw_file))
-            
+    if glyph['file']!='':
+        args.raw_file=glyph['file']
+    else:
+        print('Bad file/file path in glyph.')
+        exit(0)
 
-        if args.password==None:
-            print('I need a password to encrypt/decrypt the crypto.glyph! Use -p {password}.')
-            exit(0)
+    if glyph['layers']==['']:
+        print('entered')
+        args.encry=None
+    elif glyph['layers']!=['']:
+        args.encry='-'.join(glyph['layers'])
+    else:
+        print('Bad encryption layers in glyph.')
+        exit(0)
 
-        if args.decry == None:
-            if(run_encry(data)):
-                print('Encryption Complete!')
-        else: #makes encription the default action
-            if(run_decry(args.decry,args.raw_file)):
-                print('Decryption Complete!')
+    if glyph['huff']!=False:
+        args.huff=True
+    else:
+        args.huff=False
+
+    if glyph['steg']!='':
+        args.steg=glyph['steg']
+    else:
+        args.steg=None
+
+    if glyph['date']!='':
+        args.date=glyph['date']
+    else:
+        args.date=None
+
+    if glyph['decoy']!='':
+        args.decoy=glyph['decoy']
+    else:
+        args.decoy=None
+
+if args.raw_file == None:
+    print('So uh...I need a file or data to encrypt/decrypt. Use -f for files or -d for raw data.')
+    exit(0)
+else:
+    data=m.read_data(str(args.raw_file))
+    
+if args.password==None:
+    print('I need a password to encrypt/decrypt the crypto.glyph! Use -p {password}.')
+    exit(0)
+
+if args.decry == None:
+    if(run_encry(data)):
+        print('Encryption Complete!')
+else: #makes encription the default action
+    if(run_decry(args.decry,args.raw_file)):
+        print('Decryption Complete!')
 
 #DATE LOCK PROTOTYPE
 # accept date through arg
@@ -246,4 +222,3 @@ else:
 # if different refuse decryption
 # if same try decrypt with date appended to pass and hashed
 # if fail then try password hash only              
-    

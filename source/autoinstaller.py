@@ -18,7 +18,6 @@ packages=[
     "cryptography",
     "pycryptodome",
     "stegano",
-    "pillow"
 ]
 
 print('Running pip package autoinstaller...')
