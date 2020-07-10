@@ -82,7 +82,6 @@ def run_encry(data):
         percent_current=percent_current+1
 
     m.write_data('rune.glyph',data)
-    # print('Securing crypto.glyph with password...')
     cryptoglyph.create_glyph(glyph)
 
     if args.decoy:
