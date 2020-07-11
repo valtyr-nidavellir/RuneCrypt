@@ -1,6 +1,7 @@
 #valtyr
 import manipulator as m
 import terminal as term
+import getpass
 import encryptor
 import decryptor
 import cryptoglyph
@@ -17,7 +18,7 @@ def parse_encry(encry):
         available=get_available()
         count=0
         ops=[]
-        while count != 50:
+        while count != 40:
             ops.append(available[randint(0,len(available)-1)])
             count=count+1
         return ops
@@ -55,9 +56,9 @@ def encrypt(data,op,glyph):
     glyph.add_layer(layer)
     return data
 
-def run_encry(data):
+def run_encry(password,data):
     glyph=cryptoglyph.glyph()
-    glyph.password=args.password
+    glyph.password=password
 
     meta=str(args.raw_file).split('.')
 
@@ -71,7 +72,7 @@ def run_encry(data):
     if args.decoy:
         fake_data=encryptor.get_random_bytes(len(data))
         fake_glyph=cryptoglyph.glyph()
-        fake_glyph.password=args.password
+        fake_glyph.password=password
 
     percent_total=len(ops)
     percent_current=1
@@ -109,8 +110,8 @@ def decrypt(key,data,op,tag,nonce):
         exit(0)
     return
 
-def run_decry(crypto_glyph,raw_file):
-    glyph=decryptor.parse_cryptoglyph(args.password,m.read_data(crypto_glyph))
+def run_decry(password,crypto_glyph,raw_file):
+    glyph=decryptor.parse_cryptoglyph(password,m.read_data(crypto_glyph))
 
     file_format=glyph['Format']
     file_name=glyph['Name']
@@ -140,13 +141,14 @@ parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used 
 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
 parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 50 random layers.')
-parser.add_argument('-p',dest='password',action='store',default=None,help='Specify a password used to encrypt/decrypt a crypto.glyph.')
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
 parser.add_argument('-s',dest='steg',action='store',default=False,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
 parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
 parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
 
 args=parser.parse_args()
+
+password=None
 
 term.clear_terminal() 
 m.print_title()
@@ -159,10 +161,10 @@ if args.glyph!=None:
         print('File Read Error: Glyph no loaded.')
 
     if glyph['password']!='':
-        args.password=glyph['password']
+        password=glyph['password']
     else:
-        print('Bad password in glyph.')
-        exit(0)
+        print('No password in glyph.')
+        password=str(getpass.getpass('Pass: '))
 
     if glyph['file']!='':
         args.raw_file=glyph['file']
@@ -204,15 +206,14 @@ if args.raw_file == None:
 else:
     data=m.read_data(str(args.raw_file))
     
-if args.password==None:
-    print('I need a password to encrypt/decrypt the crypto.glyph! Use -p {password}.')
-    exit(0)
+if password==None:
+    password=getpass.getpass('Pass: ')
 
 if args.decry == None:
-    if(run_encry(data)):
+    if(run_encry(password,data)):
         print('Encryption Complete!')
 else: #makes encription the default action
-    if(run_decry(args.decry,args.raw_file)):
+    if(run_decry(password,args.decry,args.raw_file)):
         print('Decryption Complete!')
 
 #DATE LOCK PROTOTYPE

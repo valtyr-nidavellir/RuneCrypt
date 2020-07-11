@@ -1,4 +1,5 @@
 #valtyr
+from time import sleep
 
 def read_file(file_name):
     data=None
@@ -52,5 +53,6 @@ def to_literal(data):
 
 def print_title():
     for line in read_file('data/title.txt'):
+        sleep(0.07)
         print(line.strip('\n'))
     
