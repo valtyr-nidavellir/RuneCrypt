@@ -4,6 +4,7 @@ from Crypto.Cipher import ARC2
 from Crypto.Cipher import ARC4
 import encryptor
 import json
+import stegano
 
 def parse_cryptoglyph(password,data):
     try:
@@ -45,3 +46,6 @@ def arc4(key,data):
     except:
         cipher=ARC4.new(key)
     return cipher.decrypt(data)
+
+def steg(name):
+    return

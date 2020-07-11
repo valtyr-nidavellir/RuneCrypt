@@ -9,6 +9,8 @@ from Crypto import Random
 from random import choice
 import manipulator as m
 import json
+import stegano
+from stegano.lsbset import generators
 
 def get_general_key():
     return Random.get_random_bytes(choice([16,24,32]))
@@ -48,3 +50,26 @@ def arc2_eax(key,data):
 def arc4(key,data):
     cipher=ARC4.new(key)
     return cipher.encrypt(data)
+
+def steg(file_path,data,gen,path):
+    if gen=='fib':
+        generator=generators.fibonacci()
+    elif gen=='era':
+        generator=generators.eratosthenes()
+    elif gen=='ack':
+        generator=generators.ackermann(10)
+    elif gen=='car':
+        generator=generators.carmichael()
+    else:
+        pass
+        # print('Steg Failed: Unknown Steg Generator.')
+        # exit(0)
+
+    try:
+        #under construction
+        picture=stegano.lsb.hide(file_path,data)#generator
+        picture.save(path+file_path)
+    except Exception as e:
+        print('Steg Failed: '+str(e))
+        exit(0)
+    return

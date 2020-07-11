@@ -17,7 +17,7 @@ def parse_encry(encry):
         available=get_available()
         count=0
         ops=[]
-        while count != 40:
+        while count != 10:
             ops.append(available[randint(0,len(available)-1)])
             count=count+1
         return ops
@@ -91,6 +91,15 @@ def run_encry(password,data):
             m.printProgressBar(percent_current,percent_total,prefix='Encrypting Decoy:',suffix='Complete',length=50)
             percent_current=percent_current+1
         m.write_data('decoy/rune.glyph',fake_data)
+    
+    if args.steg!=None:
+        encryptor.steg(args.steg,data,str(args.gen).lower(),'steg/')
+        print("rune.crypt hidden in steg/"+str(args.steg))
+    
+    if args.decoy:
+        encryptor.steg(args.steg,fake_data,str(args.gen).lower(),'decoy/')
+        print("the decoy is hidden in decoy/"+str(args.steg))
+
     return True
 
 def decrypt(key,data,op,tag,nonce):
@@ -139,8 +148,9 @@ parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
 parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 50 random layers.')
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
-parser.add_argument('-s',dest='steg',action='store',default=False,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
+parser.add_argument('-s',dest='steg',action='store',default=None,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
 parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
+parser.add_argument('-gen',dest='gen',action='store',default=None,help='UNDER CONSTRUCTION Optional:Specify the steg generator used to hide the data. ex fib,era,ack,car')
 parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
 
 args=parser.parse_args()
@@ -186,6 +196,11 @@ if args.glyph!=None:
         args.steg=glyph['steg']
     else:
         args.steg=None
+
+    if glyph['gen']!='':
+        args.gen=glyph['gen']
+    else:
+        args.gen=None
 
     if glyph['date']!='':
         args.date=glyph['date']
