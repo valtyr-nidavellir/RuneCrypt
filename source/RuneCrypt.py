@@ -9,7 +9,7 @@ import getpass
 import json
 
 def get_available():
-    return ['fernet','aes_eax','arc2_eax','arc4']
+    return ['fernet','aes_eax','aes_cbc','arc2_eax','arc2_cbc','arc4']
 
 def parse_encry(encry):
     if encry==None:
@@ -39,10 +39,20 @@ def encrypt(data,op,glyph):
     elif op=='aes_eax':
         data,tag,nonce=encryptor.aes_eax(key,data)
         layer.add_all(op,str(key),str(tag),str(nonce))
+    
+    elif op=='aes_cbc':
+        data,iv=encryptor.aes_cbc(key,data)
+        layer.add_some(op,key)
+        layer.add_iv(iv)
 
     elif op=='arc2_eax':
         data,tag,nonce=encryptor.arc2_eax(key,data)
         layer.add_all(op,str(key),str(tag),str(nonce))
+
+    elif op=='arc2_cbc':
+        data,iv=encryptor.arc2_cbc(key,data)
+        layer.add_some(op,key)
+        layer.add_iv(iv)
 
     elif op=='arc4':
         data=encryptor.arc4(key,data)
@@ -102,13 +112,17 @@ def run_encry(password,data):
     print('Secured crypto.glyph with password!')
     return True
 
-def decrypt(key,data,op,tag,nonce):
+def decrypt(key,data,op,tag,nonce,iv):
     if op=='fernet':
         return decryptor.fernet(key,data)
     elif op=='aes_eax':
         return decryptor.aes_eax(key,data,tag,nonce)
+    elif op=='aes_cbc':
+        return decryptor.aes_cbc(key,data,iv)
     elif op=='arc2_eax':
         return decryptor.arc2_eax(key,data,tag,nonce)
+    elif op=='arc2_cbc':
+        return decryptor.arc2_cbc(key,data,iv)
     elif op=='arc4':
         return decryptor.arc4(key,data)
     else:
@@ -136,7 +150,8 @@ def run_decry(password,crypto_glyph,raw_file):
         op=glyph[layer]['op']
         tag=glyph[layer]['tag']
         nonce=glyph[layer]['nonce']
-        data=decrypt(key,data,op,tag,nonce)
+        iv=glyph[layer]['iv']
+        data=decrypt(key,data,op,tag,nonce,iv)
         m.printProgressBar(percent_current,percent_total,prefix='Decrypting:',suffix='Complete',length=50)
         counter=counter-1
         percent_current=percent_current+1
@@ -149,7 +164,7 @@ parser.add_argument('-g',dest='glyph',action='store',default=None,help='Optional
 parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used to flag a file for encryption/decryption. ex. -f example.txt or rune.glyph.')
 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
-parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 15 random layers.')
+parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 15 random layers. available layers:fernet, aes_eax, aes_cbc, arc2_eax, arc2_cbc, arc4')
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
 parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
 parser.add_argument('-s',dest='steg',action='store',default=None,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
@@ -162,6 +177,7 @@ password=None
 
 m.clear_terminal() 
 m.print_title()
+m.print_tip()
 
 if args.glyph!=None:
     try:
@@ -174,7 +190,7 @@ if args.glyph!=None:
         password=glyph['password']
     else:
         print('No password in glyph.')
-        password=str(getpass.getpass('Pass: '))
+        password=str(getpass.getpass('Password: '))
 
     if glyph['file']!='':
         args.raw_file=glyph['file']

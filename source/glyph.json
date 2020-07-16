@@ -1,5 +1,6 @@
 {
     "--comment-glyph":"this json file is used to streamline the encryption process. use the command python3 RuneCrypt.py -g glyph.json when using this file.",
+
     "--comment-file":"specify a file or file path to encrypt.",
     "file":"",
 

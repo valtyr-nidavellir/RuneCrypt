@@ -17,7 +17,7 @@ def create_glyph(glyph):
 
 class layer:
     def get_json(self):
-        return {"op":self.operation,"key":self.key,"tag":self.tab,"nonce":self.nonce,"padding":self.padding}
+        return {"op":self.operation,"key":self.key,"tag":self.tab,"nonce":self.nonce,"iv":self.iv}
 
     def add_all(self,operation,key,tab,nonce):
         self.add_op(operation)
@@ -41,14 +41,14 @@ class layer:
     def add_nonce(self,nonce):
         self.nonce=nonce
     
-    def add_padding(self,padding):
-        self.padding=padding
+    def add_iv(self,iv):
+        self.iv=str(iv)
 
     key=None
     operation=None
     tab=None
     nonce=None
-    padding=None
+    iv=None
 
 class glyph:
     def add_date(self,date):

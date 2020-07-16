@@ -1,6 +1,7 @@
 #valtyr
 from cryptography.fernet import Fernet
 from stegano.lsbset import generators
+from Crypto.Util.Padding import pad
 from Crypto.Cipher import AES
 from Crypto.Cipher import ARC2
 from Crypto.Cipher import ARC4
@@ -33,15 +34,25 @@ def fernet(key,data):
 def get_fernet_key():
     return Fernet.generate_key() 
 
+    
 def aes_eax(key,data):
-    cipher = AES.new(key, AES.MODE_EAX)
+    cipher=AES.new(key, AES.MODE_EAX)
     data,tag=cipher.encrypt_and_digest(data)  
     return data,tag,cipher.nonce
+
+def aes_cbc(key,data):
+    cipher=AES.new(key,AES.MODE_CBC)
+    return cipher.encrypt(pad(data,AES.block_size)),cipher.iv
+    
 
 def arc2_eax(key,data):
     cipher=ARC2.new(key,ARC2.MODE_EAX)
     data,tag=cipher.encrypt_and_digest(data)
     return data,tag,cipher.nonce
+
+def arc2_cbc(key,data):
+    cipher=ARC2.new(key,ARC2.MODE_CBC)
+    return cipher.encrypt(pad(data,ARC2.block_size)),cipher.iv
 
 def arc4(key,data):
     cipher=ARC4.new(key)

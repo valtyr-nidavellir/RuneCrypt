@@ -1,5 +1,6 @@
 #valtyr
 from time import sleep
+from random import randint
 import os
 
 def read_file(file_name):
@@ -56,6 +57,16 @@ def print_title():
     for line in read_file('data/title.txt'):
         sleep(0.07)
         print(line.strip('\n'))
+
+def print_tip():
+    tips=[
+        'The crypto.glyph file is the weakest link in the encryption chain. Protect it carefully.',
+        'Decoys can be generated using -decoy t. The decoy rune.glyph is the same size as the original but filled with garbage data.',
+        'You can use the included autoinstaller.py to upgrade pip and RuneCrypt\'s dependencies.',
+        'Some Linux distros can interfere with an encryption algos eax check, so these will be auto corrected during runtime.',
+        'You can use the included glyph.json file to streamline the command line args. Use -g glyph.json to load the file\'s args.',
+    ]
+    print('Tip: '+tips[randint(0,len(tips)-1)])
     
 def clear_terminal():
     try:
