@@ -3,8 +3,8 @@ from Crypto.Cipher import AES
 from Crypto.Cipher import ARC2
 from Crypto.Cipher import ARC4
 import encryptor
-import json
 import stegano
+import json
 
 def parse_cryptoglyph(password,data):
     try:
@@ -48,4 +48,7 @@ def arc4(key,data):
     return cipher.decrypt(data)
 
 def steg(name):
+    #Under Construction
+    print('Retrieving steg data...this might take a moment...')
+    print(stegano.lsb.reveal(name))
     return

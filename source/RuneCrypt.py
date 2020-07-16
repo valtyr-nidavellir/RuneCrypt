@@ -1,23 +1,22 @@
 #valtyr
 import manipulator as m
-import getpass
+from random import randint
+import cryptoglyph
 import encryptor
 import decryptor
-import cryptoglyph
 import argparse 
+import getpass
 import json
-from random import randint
 
 def get_available():
     return ['fernet','aes_eax','arc2_eax','arc4']
 
 def parse_encry(encry):
     if encry==None:
-        #default layering
         available=get_available()
         count=0
         ops=[]
-        while count != 10:
+        while count != 15:
             ops.append(available[randint(0,len(available)-1)])
             count=count+1
         return ops
@@ -92,14 +91,15 @@ def run_encry(password,data):
             percent_current=percent_current+1
         m.write_data('decoy/rune.glyph',fake_data)
     
-    if args.steg!=None:
-        encryptor.steg(args.steg,data,str(args.gen).lower(),'steg/')
-        print("rune.crypt hidden in steg/"+str(args.steg))
-    
-    if args.decoy:
-        encryptor.steg(args.steg,fake_data,str(args.gen).lower(),'decoy/')
-        print("the decoy is hidden in decoy/"+str(args.steg))
+    #Under Construction
+    # if args.steg!=None:
+    #     encryptor.steg(args.steg,data,str(args.gen).lower(),'steg/')
+    #     print("rune.crypt hidden in\tsteg/"+str(args.steg))   
+    #     if args.decoy:
+    #         encryptor.steg(args.steg,fake_data,str(args.gen).lower(),'decoy/')
+    #         print("decoy hidden in\t\tdecoy/"+str(args.steg))
 
+    print('Secured crypto.glyph with password!')
     return True
 
 def decrypt(key,data,op,tag,nonce):
@@ -122,6 +122,9 @@ def run_decry(password,crypto_glyph,raw_file):
     file_format=glyph['Format']
     file_name=glyph['Name']
     counter=int(glyph['Layers'])-1
+
+    #TODO fix later
+    # decryptor.steg('steg/test.jpg')
 
     data=m.read_data(raw_file)
 
@@ -146,10 +149,10 @@ parser.add_argument('-g',dest='glyph',action='store',default=None,help='Optional
 parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used to flag a file for encryption/decryption. ex. -f example.txt or rune.glyph.')
 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
-parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 50 random layers.')
+parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 15 random layers.')
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
-parser.add_argument('-s',dest='steg',action='store',default=None,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
 parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
+parser.add_argument('-s',dest='steg',action='store',default=None,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
 parser.add_argument('-gen',dest='gen',action='store',default=None,help='UNDER CONSTRUCTION Optional:Specify the steg generator used to hide the data. ex fib,era,ack,car')
 parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
 
@@ -219,19 +222,11 @@ else:
     data=m.read_data(str(args.raw_file))
     
 if password==None:
-    password=getpass.getpass('Pass: ')
+    password=getpass.getpass('Password: ')
 
 if args.decry == None:
     if(run_encry(password,data)):
         print('Encryption Complete!')
-else: #makes encription the default action
+else: #makes encryption the default action
     if(run_decry(password,args.decry,args.raw_file)):
-        print('Decryption Complete!')
-
-#DATE LOCK PROTOTYPE
-# accept date through arg
-# add to the password then hash
-# in decrypting check system date against ntp date
-# if different refuse decryption
-# if same try decrypt with date appended to pass and hashed
-# if fail then try password hash only              
+        print('Decryption Complete!')            

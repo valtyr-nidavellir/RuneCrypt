@@ -1,25 +1,27 @@
 {
+    "--comment-glyph":"this json file is used to streamline the encryption process. use the command python3 RuneCrypt.py -g glyph.json when using this file.",
     "--comment-file":"specify a file or file path to encrypt.",
     "file":"",
 
-    "--comment-layers":"specify encryption layers. leave blank for 50 random layers. available: random,fernet,aes_eax,arc2_eax,arc4.",
+    "--comment-layers":"optional: specify encryption layers. leave blank for 15 random layers. available: random,fernet,aes_eax,arc2_eax,arc4.",
     "layers":[""],
 
     "--comment-password":"specify a password which is used to encrypt the crypto.glyph. delete this password after encrypting.",
     "password":"",
-    
-    "--comment-huff":"optional: change to true to enable Huffman encoding to reduce final encryption size.",
-    "huff":false,
-
-    "--comment-steg":"optional: specify a file or file path to hide the rune.glyph in. can be a video.",
-    "steg":"",
-
-    "--comment-gen-UNDER-CONSTRUCTION":"optional: specify the steg generator used to hide the data. ex fib,era,ack,car",
-    "gen":"",
-
-    "--comment-date":"optional: specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.",
-    "date":"",
 
     "--comment-decoy":"optional: change to true to enable decoys. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy.",
-    "decoy":false
+    "decoy":false,
+    
+    "--comment-huff":"Under Construction: optional: change to true to enable Huffman encoding to reduce final encryption size.",
+    "huff":false,
+
+    "--comment-steg":"Under Construction: optional: specify a file or file path to hide the rune.glyph in. can be a video.",
+    "steg":"",
+
+    "--comment-gen":"Under Construction: optional: specify the steg generator used to hide the data. ex fib,era,ack,car",
+    "gen":"",
+
+    "--comment-date":"Under Construction: optional: specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.",
+    "date":""
+
 }

@@ -1,6 +1,6 @@
 #valtyr
 from cryptography.fernet import Fernet
-# from Crypto.Cipher import 
+from stegano.lsbset import generators
 from Crypto.Cipher import AES
 from Crypto.Cipher import ARC2
 from Crypto.Cipher import ARC4
@@ -8,9 +8,8 @@ from Crypto.Hash import SHA256
 from Crypto import Random
 from random import choice
 import manipulator as m
-import json
 import stegano
-from stegano.lsbset import generators
+import json
 
 def get_general_key():
     return Random.get_random_bytes(choice([16,24,32]))
@@ -23,10 +22,7 @@ def get_hashed_pass(password):
 
 def secure_glyph(password,data):
     hashed=get_hashed_pass(password)
-
-    #TODO need to change to something better later
     data=arc4(hashed.encode(),data)
-    
     m.write_data('crypto.glyph',data)
     return True
 
@@ -51,6 +47,7 @@ def arc4(key,data):
     cipher=ARC4.new(key)
     return cipher.encrypt(data)
 
+#Under Construction
 def steg(file_path,data,gen,path):
     if gen=='fib':
         generator=generators.fibonacci()
@@ -66,8 +63,7 @@ def steg(file_path,data,gen,path):
         # exit(0)
 
     try:
-        #under construction
-        picture=stegano.lsb.hide(file_path,data)#generator
+        picture=stegano.lsb.hide(file_path,data)
         picture.save(path+file_path)
     except Exception as e:
         print('Steg Failed: '+str(e))
