@@ -2,7 +2,10 @@
 A hardcore encryption application - Currently in beta testing - Available on Windows and Linux <br>
 
 # Basic Usage:<br>
- Most used commands-<br>
+To install the necessary libraries use-<br>
+ python3 autoinstaller.py <br>
+ 
+Most used commands-<br>
   python3 RuneCrypt.py -f some_file_name_or_path -decoy t<br>
   python3 RuneCrypt.py -f rune.glyph -d crypto.glyph<br>
   
