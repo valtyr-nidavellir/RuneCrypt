@@ -1,24 +1,22 @@
 # RuneCrypt
-A hardcore encryption application /n
-Currently in beta testing/n
-Available on Windows and Linux/n
+A hardcore encryption application - Currently in beta testing - Available on Windows and Linux <br>
 
-#Basic Usage:
- Most used commands-
-  python3 RuneCrypt.py -f some_file_name_or_path -decoy t
-  python3 RuneCrypt.py -f rune.glyph -d crypto.glyph
+#Basic Usage:<br>
+ Most used commands-<br>
+  python3 RuneCrypt.py -f some_file_name_or_path -decoy t<br>
+  python3 RuneCrypt.py -f rune.glyph -d crypto.glyph<br>
   
-To use the default action of encrypting a file with 15 random layers-
-  python3 RuneCrypt.py -f some_file_name_or_path
+To use the default action of encrypting a file with 15 random layers-<br>
+  python3 RuneCrypt.py -f some_file_name_or_path<br>
   
-To decrypt a rune.glyph-
-  python3 RuneCrypt.py -f rune.glyph -d crypto.glyph
+To decrypt a rune.glyph-<br>
+  python3 RuneCrypt.py -f rune.glyph -d crypto.glyph<br>
   
-To specify encryption layers-
-  python3 RuneCrypt.py -f some_file_name_or_path -e random-random-random etc.
+To specify encryption layers-<br>
+  python3 RuneCrypt.py -f some_file_name_or_path -e random-random-random etc.<br>
   
-To use the streamline glyph ability-
-  python3 RuneCrypt.py -f some_file_name_or_path -g glyph.json
+To use the streamline glyph ability-<br>
+  python3 RuneCrypt.py -f some_file_name_or_path -g glyph.json<br>
   
-To create a rune.glyph decoy-
-  python3 RuneCrypt.py -f some_file_name_or_path -decoy t
+To create a rune.glyph decoy-<br>
+  python3 RuneCrypt.py -f some_file_name_or_path -decoy t<br>
