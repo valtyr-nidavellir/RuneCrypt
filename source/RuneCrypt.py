@@ -29,7 +29,7 @@ def encrypt(data,op,glyph):
 
     if op=='random':
         op=get_available()
-        op=randint(0,len(op)-1)
+        op=op[randint(0,len(op)-1)]
 
     if op=='fernet':
         key=encryptor.get_fernet_key()
@@ -166,10 +166,10 @@ parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
 parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 15 random layers. available layers:fernet, aes_eax, aes_cbc, arc2_eax, arc2_cbc, arc4')
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
-parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
-parser.add_argument('-s',dest='steg',action='store',default=None,help='Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
-parser.add_argument('-gen',dest='gen',action='store',default=None,help='UNDER CONSTRUCTION Optional:Specify the steg generator used to hide the data. ex fib,era,ack,car')
-parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
+parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Under Construction:Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
+parser.add_argument('-s',dest='steg',action='store',default=None,help='Under Construction:Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
+parser.add_argument('-gen',dest='gen',action='store',default=None,help='Under Construction:Optional:Specify the steg generator used to hide the data. ex fib,era,ack,car')
+parser.add_argument('-date',dest='date_lock',action='store',default=False,help='Under Construction:Optional:Advanced:Specify a date lock for crypto.glyph only allowing decryption on the specified date. ex.DD/MM/YYYY.')
 
 args=parser.parse_args()
 
