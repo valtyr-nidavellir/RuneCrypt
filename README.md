@@ -1,7 +1,7 @@
 # RuneCrypt
 A hardcore encryption application - Currently in beta testing - Available on Windows and Linux <br>
 
-#Basic Usage:<br>
+# Basic Usage:<br>
  Most used commands-<br>
   python3 RuneCrypt.py -f some_file_name_or_path -decoy t<br>
   python3 RuneCrypt.py -f rune.glyph -d crypto.glyph<br>
