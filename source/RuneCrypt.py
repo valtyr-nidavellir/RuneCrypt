@@ -1,6 +1,6 @@
 #valtyr
-import manipulator as m
 from random import randint
+import manipulator as m
 import cryptoglyph
 import encryptor
 import decryptor
@@ -9,14 +9,14 @@ import getpass
 import json
 
 def get_available():
-    return ['fernet','aes_eax','aes_cbc','arc2_eax','arc2_cbc','arc4']
+    return ['fernet','aes_eax','aes_cbc','arc2_cbc','arc4'] #arc2_eax
 
 def parse_encry(encry):
     if encry==None:
         available=get_available()
         count=0
         ops=[]
-        while count != 15:
+        while count != 10:
             ops.append(available[randint(0,len(available)-1)])
             count=count+1
         return ops
@@ -37,17 +37,25 @@ def encrypt(data,op,glyph):
         layer.add_some(op,key)
 
     elif op=='aes_eax':
-        data,tag,nonce=encryptor.aes_eax(key,data)
-        layer.add_all(op,str(key),str(tag),str(nonce))
-    
+        try:
+            data,tag,nonce=encryptor.aes_eax(key,data)
+            layer.add_all(op,str(key),str(tag),str(nonce))
+        except(ValueError):
+            print('\nNotice: MAC is unsafe for this message. Data is too large to use: '+op)
+            exit(0)
+
     elif op=='aes_cbc':
         data,iv=encryptor.aes_cbc(key,data)
         layer.add_some(op,key)
         layer.add_iv(iv)
 
     elif op=='arc2_eax':
-        data,tag,nonce=encryptor.arc2_eax(key,data)
-        layer.add_all(op,str(key),str(tag),str(nonce))
+        try:
+            data,tag,nonce=encryptor.arc2_eax(key,data)
+            layer.add_all(op,str(key),str(tag),str(nonce))
+        except(ValueError):
+            print('\nNotice: MAC is unsafe for this message. Data is too large to use: '+op)
+            exit(0)
 
     elif op=='arc2_cbc':
         data,iv=encryptor.arc2_cbc(key,data)
@@ -59,7 +67,7 @@ def encrypt(data,op,glyph):
         layer.add_some(op,str(key))
 
     else:
-        print('Unknown Encryption Layer: Exiting...')
+        print('\nUnknown Encryption Layer: Exiting...')
         exit(0)
     glyph.add_layer(layer)
     return data
@@ -126,7 +134,7 @@ def decrypt(key,data,op,tag,nonce,iv):
     elif op=='arc4':
         return decryptor.arc4(key,data)
     else:
-        print('Unknown Decryption Layer: Exiting...')
+        print('\nUnknown Decryption Layer: Exiting...')
         exit(0)
     return
 
@@ -164,7 +172,7 @@ parser.add_argument('-g',dest='glyph',action='store',default=None,help='Optional
 parser.add_argument('-f',dest='raw_file',action='store',default=None,help='Used to flag a file for encryption/decryption. ex. -f example.txt or rune.glyph.')
 
 parser.add_argument('-d',dest='decry',action='store',default=None,help='Flag used to signal the decryption operation : specify the path to crypto.glyph.')
-parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 15 random layers. available layers:fernet, aes_eax, aes_cbc, arc2_eax, arc2_cbc, arc4')
+parser.add_argument('-e',dest='encry',action='store',default=None,help='Optional:Specify encryption layers seperated by dashes. ex. random-random-random-random. Default uses 10 random layers. available layers:fernet, aes_eax, aes_cbc, arc2_eax, arc2_cbc, arc4')
 parser.add_argument('-decoy',dest='decoy',action='store',nargs='?',default=False,const=True,help='Optional:Advanced:Signal that you want decoys made. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy. ex. -decoy True or t.')
 parser.add_argument('-huff',action='store',nargs='?',default=False,const=True,help='Under Construction:Optional:Advanced:Specify \'True\' to enable huffman encoding on the encrypted data to reduce final size. ex. -huff True or t.')
 parser.add_argument('-s',dest='steg',action='store',default=None,help='Under Construction:Optional:Advanced:Specify a file/path to steganographically hide data. Can be a video.')
@@ -232,7 +240,7 @@ if args.glyph!=None:
         args.decoy=None
 
 if args.raw_file == None:
-    print('So uh...I need a file or data to encrypt/decrypt. Use -f for files or -d for raw data.')
+    print('So uh...I need a file or data to encrypt/decrypt. Use -f to flag files.')
     exit(0)
 else:
     data=m.read_data(str(args.raw_file))

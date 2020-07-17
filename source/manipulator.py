@@ -1,6 +1,6 @@
 #valtyr
-from time import sleep
 from random import randint
+from time import sleep
 import os
 
 def read_file(file_name):
@@ -63,8 +63,9 @@ def print_tip():
         'The crypto.glyph file is the weakest link in the encryption chain. Protect it carefully.',
         'Decoys can be generated using -decoy t. The decoy rune.glyph is the same size as the original but filled with garbage data.',
         'You can use the included autoinstaller.py to upgrade pip and RuneCrypt\'s dependencies.',
-        'Some Linux distros can interfere with an encryption algos eax check, so these will be auto corrected during runtime.',
+        'Some generated MAC\'s can fail an eax check, so these will be auto corrected during runtime.',
         'You can use the included glyph.json file to streamline the command line args. Use -g glyph.json to load the file\'s args.',
+        'The encryption algo arc2_eax is not included in the default rotation for the default 10 random layers due to MAC failure when dealing with larger data.',
     ]
     print('Tip: '+tips[randint(0,len(tips)-1)])
     

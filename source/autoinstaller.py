@@ -1,5 +1,4 @@
 #valtyr
-#pip package autoinstaller
 #python autoinstaller.py
 
 import subprocess

@@ -1,7 +1,7 @@
 #valtyr
 import manipulator as m
-import json
 import encryptor
+import json
 
 def create_glyph(glyph):
     data={}
