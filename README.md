@@ -1,7 +1,7 @@
 # RuneCrypt
-~A hardcore encryption application~
-Currently in beta testing
-Available on Windows and Linux
+A hardcore encryption application /n
+Currently in beta testing/n
+Available on Windows and Linux/n
 
 #Basic Usage:
  Most used commands-
