@@ -31,14 +31,15 @@ except:
     exit(1)
 
 choice=input('Upgrade pip? Y/N: ')
-if(choice=='y' or choice=='Y'):
+if(choice.lower()=='y'):
+    print("Upgrading.")
     subprocess.run(pip)
 
 print('Continuing execution...')
 
 try:
     for package in packages:
-        print('installing:\t'+package)
+        print('Installing:\t'+package)
         try:
             subprocess.run(["python3","-m","pip","install", package])
         except:

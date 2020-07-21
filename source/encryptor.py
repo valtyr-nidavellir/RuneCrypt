@@ -33,7 +33,6 @@ def fernet(key,data):
 
 def get_fernet_key():
     return Fernet.generate_key() 
-
     
 def aes_eax(key,data):
     cipher=AES.new(key, AES.MODE_EAX)

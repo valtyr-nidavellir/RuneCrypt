@@ -4,13 +4,13 @@
     "--comment-file":"specify a file or file path to encrypt.",
     "file":"",
 
-    "--comment-layers":"optional: specify encryption layers. leave blank for 10 random layers. available: random,fernet,aes_eax,arc2_eax,arc4.",
+    "--comment-layers":"Optional:specify encryption layers. leave blank for 20 random layers. available: random,fernet,aes_eax,arc2_eax,arc4.",
     "layers":[""],
 
-    "--comment-password":"specify a password which is used to encrypt the crypto.glyph. delete this password after encrypting.",
+    "--comment-password":"Optional:specify a password which is used to encrypt the crypto.glyph. delete this password after encrypting.",
     "password":"",
 
-    "--comment-decoy":"optional: change to true to enable decoys. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy.",
+    "--comment-decoy":"Optional:change to true to enable decoys. This produces identical encrypted files of the same size, but with garbage data. The cryptoglyph for the decoy is not saved and the cryptoglyph for the real data cannot decrypt the decoy.",
     "decoy":false,
     
     "--comment-huff":"Under Construction: optional: change to true to enable Huffman encoding to reduce final encryption size.",
