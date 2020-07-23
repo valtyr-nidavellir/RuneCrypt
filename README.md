@@ -9,7 +9,7 @@ Most used commands-<br>
   python3 RuneCrypt.py -f some_file_name_or_path -decoy t<br>
   python3 RuneCrypt.py -f rune.glyph -d crypto.glyph<br>
   
-To use the default action of encrypting a file with 15 random layers-<br>
+To use the default action of encrypting a file with 20 random layers-<br>
   python3 RuneCrypt.py -f some_file_name_or_path<br>
   
 To decrypt a rune.glyph-<br>
