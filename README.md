@@ -23,3 +23,5 @@ To use the streamline glyph ability-<br>
   
 To create a rune.glyph decoy-<br>
   python3 RuneCrypt.py -f some_file_name_or_path -decoy t<br>
+
+#python #python3 #encryption #hardcore #RuneCrypt #crypto.glyph #rune.glyph #aes #arc2 #arc4 #cipher #pycryptodome
