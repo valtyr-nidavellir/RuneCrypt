@@ -44,15 +44,6 @@ def to_bytes(data):
     else:
         return data
 
-def to_string(data):
-    if type(data)==bytes:
-        return data.decode()
-    else:
-        return data
-
-def to_literal(data):
-    return 
-
 def print_title():
     for line in read_file('data/title.txt'):
         sleep(0.07)
@@ -82,3 +73,7 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     print(f'\r{prefix}\t|{bar}| {percent}% {suffix}', end = printEnd)
     if iteration == total: 
         print()
+
+def detect_gpu():
+    # add conda numba libs to detect a and return gpu
+    return 

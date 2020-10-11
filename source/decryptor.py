@@ -8,6 +8,8 @@ import encryptor
 import stegano
 import json
 
+# add gpu exceleration to all functions
+
 def parse_cryptoglyph(password,data):
     try:
         return json.loads(arc4(encryptor.get_hashed_pass(password).encode(),data))
@@ -62,7 +64,7 @@ def arc4(key,data):
     return cipher.decrypt(data)
 
 def steg(name):
-    #Under Construction
+    #Under Construction - might shell stegano or steghide
     print('Retrieving steg data...this might take a moment...')
     print(stegano.lsb.reveal(name))
     return

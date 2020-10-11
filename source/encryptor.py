@@ -12,6 +12,8 @@ import manipulator as m
 import stegano
 import json
 
+# add gpu exceleration to all functions
+
 def get_general_key():
     return Random.get_random_bytes(choice([16,24,32]))
 
@@ -57,7 +59,7 @@ def arc4(key,data):
     cipher=ARC4.new(key)
     return cipher.encrypt(data)
 
-#Under Construction
+#Under Construction - might just use stegano or steghide
 def steg(file_path,data,gen,path):
     if gen=='fib':
         generator=generators.fibonacci()
