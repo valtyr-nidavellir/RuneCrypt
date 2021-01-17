@@ -1,6 +1,7 @@
 #valtyr
 from random import randint
 import manipulator as m
+import gui as gui
 import cryptoglyph
 import encryptor
 import decryptor
@@ -95,7 +96,7 @@ def run_encry(password,data):
 
     for op in ops:
         data=encrypt(data,str(op).lower(),glyph)           
-        m.printProgressBar(percent_current,percent_total,prefix='Encrypting Data:',suffix='Complete',length=50)
+        gui.printProgressBar(percent_current,percent_total,prefix='Encrypting Data:',suffix='Complete',length=50)
         percent_current=percent_current+1
 
     m.write_data('rune.glyph',data)
@@ -105,7 +106,7 @@ def run_encry(password,data):
         percent_current=1
         for op in ops:
             fake_data=encrypt(fake_data,str(op).lower(),fake_glyph)
-            m.printProgressBar(percent_current,percent_total,prefix='Encrypting Decoy:',suffix='Complete',length=50)
+            gui.printProgressBar(percent_current,percent_total,prefix='Encrypting Decoy:',suffix='Complete',length=50)
             percent_current=percent_current+1
         m.write_data('decoy/rune.glyph',fake_data)
     
@@ -160,7 +161,7 @@ def run_decry(password,crypto_glyph,raw_file):
         nonce=glyph[layer]['nonce']
         iv=glyph[layer]['iv']
         data=decrypt(key,data,op,tag,nonce,iv)
-        m.printProgressBar(percent_current,percent_total,prefix='Decrypting:',suffix='Complete',length=50)
+        gui.printProgressBar(percent_current,percent_total,prefix='Decrypting:',suffix='Complete',length=50)
         counter=counter-1
         percent_current=percent_current+1
     final_name=''.join(file_name)+'.'+file_format
@@ -182,9 +183,9 @@ args=parser.parse_args()
 
 password=None
 
-m.clear_terminal() 
-m.print_title()
-m.print_tip()
+gui.clear_terminal() 
+gui.print_title()
+gui.print_tip()
 
 if args.glyph!=None:
     try:
